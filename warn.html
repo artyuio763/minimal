@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศูนย์แจ้งเตือน - Parts Notification Center</title>
+    <link rel="icon" href="./ChatGPT Image 17 ก.ค. 2569 12_42_50.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        p, h1, h2, h3, h4, h5, h6, span, a, button, input, textarea, div {
+            font-family: 'Mitr', sans-serif !important;
+            font-weight: 400;
+
+        }
+
+    </style>
+
+    <style>
+        /* ==========================================
+           1. RESET & GENERAL STYLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px 5%;
+        }
+
+        /* Top Header Navbar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a252f;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .btn-back {
+            background-color: #7f8c8d;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover { background-color: #95a5a6; }
+
+        /* Notification Layout */
+        .section-title {
+            font-size: 1.2rem;
+            color: #eff0f1;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+            margin-bottom: 25px;
+        }
+
+        /* Stock Warning Box */
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-left: 5px solid #e74c3c;
+            background-color: #fdf2e9;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .alert-item.out {
+            border-left-color: #c0392b;
+            background-color: #fadbd8;
+        }
+
+        /* Table Styles */
+        .table-responsive { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #e1e8ed;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th { background-color: #2c3e50; color: white; }
+
+        .part-badge {
+            font-family: monospace;
+            font-weight: bold;
+            color: #2980b9;
+            background-color: #ebf5fb;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .badge-danger {
+            background-color: #e74c3c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .badge-success {
+            background-color: #27ae60;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+    <style>
+        body{
+            background-image: url('ChatGPT Image.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+<body>
+
+    <!-- TOP NAV / HEADER -->
+    <header class="top-bar">
+        <a href="index.html" class="btn-back">⬅️ ย้อนกลับไปหน้า Navbar</a>
+        <h2>🔔 ศูนย์แจ้งเตือนระบบอะไหล่</h2>
+        <div></div>
+    </header>
+
+    <main>
+        <!-- ส่วนที่ 1: แจ้งเตือนจากหน้าอะไหล่ (สต็อกใกล้หมด / สินค้าหมด) -->
+        <h3 class="section-title">⚠️ แจ้งเตือนอะไหล่ใกล้หมด / ต้องเติมสินค้า</h3>
+        <div class="card" id="stockAlertContainer">
+            <!-- ข้อมูลเตือนสต็อกจะแสดงที่นี่ -->
+        </div>
+
+        <!-- ส่วนที่ 2: แจ้งเตือนจากหน้าเบิกอะไหล่ (รายการที่มีการเบิกล่าสุด) -->
+        <h3 class="section-title">📦 แจ้งเตือนรายการเบิกอะไหล่ล่าสุด</h3>
+        <div class="card">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ผู้เบิก</th>
+                            <th>PART NUMBER</th>
+                            <th>DESCRIPTION</th>
+                            <th>จำนวนที่เบิก</th>
+                            <th>ตำแหน่งจัดเก็บ</th>
+                            <th>วัน / เวลาที่เบิก</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reqNotifyTableBody">
+                        <!-- รายการเบิกจะแสดงที่นี่ -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ดึงข้อมูลจาก localStorage
+        const partsData = JSON.parse(localStorage.getItem('partsData')) || [];
+        const reqHistory = JSON.parse(localStorage.getItem('reqHistory')) || [];
+
+        window.onload = function() {
+            renderStockAlerts();
+            renderReqNotifications();
+        };
+
+        // 1. ดึงข้อมูลจากหน้าอะไหล่: ตรวจสอบรายการที่ใกล้หมด (<= 3 ชิ้น)
+        function renderStockAlerts() {
+            const container = document.getElementById('stockAlertContainer');
+            container.innerHTML = '';
+
+            let lowStockItems = [];
+
+            partsData.forEach(cat => {
+                cat.items.forEach(item => {
+                    if (item.qty <= 3) {
+                        lowStockItems.push({
+                            ...item,
+                            categoryName: cat.name
+                        });
+                    }
+                });
+            });
+
+            if (lowStockItems.length === 0) {
+                container.innerHTML = `<p style="color: #27ae60; font-weight: bold;">✅ อะไหล่ทุกรายการมีจำนวนเพียงพอในคลัง</p>`;
+                return;
+            }
+
+            lowStockItems.forEach(item => {
+                const isOut = item.qty === 0;
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert-item ${isOut ? 'out' : ''}`;
+                
+                alertDiv.innerHTML = `
+                    <div>
+                        <strong>[${item.categoryName}]</strong> <span class="part-badge">${item.partNum}</span> - ${item.desc}
+                        <br>
+                        <small style="color: #555;">📍 ตำแหน่ง: ${item.location}</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="badge-danger">${isOut ? '🚨 สินค้าหมด!' : `⚠️ คงเหลือเพียง ${item.qty} ชิ้น`}</span>
+                        <div style="font-size: 0.8rem; color: #e74c3c; margin-top: 4px; font-weight: bold;">
+                            ${isOut ? 'กรุณาเติมอะไหล่ด่วน!' : 'ควรสั่งซื้อเติมคลัง'}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(alertDiv);
+            });
+        }
+
+        // 2. ดึงข้อมูลจากหน้าเบิกอะไหล่: แสดงรายการผู้เบิก + รายละเอียด
+        function renderReqNotifications() {
+            const tbody = document.getElementById('reqNotifyTableBody');
+            tbody.innerHTML = '';
+
+            if (reqHistory.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">ยังไม่มีรายการเบิกอะไหล่ใหม่</td></tr>`;
+                return;
+            }
+
+            reqHistory.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>👤 ${item.requester}</strong></td>
+                    <td><span class="part-badge">${item.partNum}</span></td>
+                    <td>${item.desc}</td>
+                    <td><span class="badge-danger">-${item.qty}</span></td>
+                    <td><span class="badge-success">📍 ${item.location}</span></td>
+                    <td><small style="color:#666;">🕒 ${item.datetime}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
