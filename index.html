@@ -1,0 +1,914 @@
+<!DOCTYPE html> 
+<html lang="th">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoParts Store </title>
+    <link rel="icon" href="./ChatGPT Image 17 ก.ค. 2569 12_42_50.png">
+    <!-- 1. ดึงฟอนต์ภาษาไทยสวยๆ จาก Google Fonts (แปะไว้ในแท็ก <head>) -->
+<!-- 1. นำเข้าฟอนต์ Prompt จาก Google Fonts (วางในแท็ก <head>) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    p, h1, h2, h3, h4, h5, h6, a, span, div, li, button {
+        font-family: 'Mitr', sans-serif !important;
+        font-weight: 400;
+    }
+</style>
+
+
+    <style>
+        body{
+            background-image: url('ChatGPT Image.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+    <style>
+        /* ==========================================
+           1. RESET & BASE STYLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #f8f8f8;
+        }
+
+        /* ==========================================
+           2. NAVBAR CONTAINER
+           ========================================== */
+        .navbar {
+            background-color: #1a252f; /* โทนสีเข้ม เหมาะกับร้านอะไหล่ */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* โลโก้ */
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3c4de7; /* สีแดงสปอร์ต/เทค */
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: #ffffff;
+        }
+
+        /* ==========================================
+           3. NAV MENU (รายการเมนู)
+           ========================================== */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-item a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap; /* ป้องกันคำตกบรรทัด */
+        }
+
+        /* Effect เมื่อเอาเมาส์ไปชี้ (Hover) */
+        .nav-item a:hover {
+            background-color: #3c6ae7;
+            color: #ffffff;
+        }
+
+        /* เมนูหน้าปัจจุบัน (Active) */
+        .nav-item a.active {
+            background-color: #3c6ae7;
+            font-weight: bold;
+        }
+
+
+        /* ==========================================
+           4. RESPONSIVE DESIGN (หน้าจอขนาดเล็ก/มือถือ)
+           ========================================== */
+        @media (max-width: 768px) {
+            /* ปรับโครงสร้าง Navbar ให้วางซ้อนกันบน-ล่าง */
+            .navbar {
+                flex-direction: column;
+                padding: 12px 15px;
+                gap: 12px;
+            }
+
+            /* ปรับรายการเมนูให้มาเรียงแถวนอนด้านล่าง */
+            .nav-menu {
+                width: 100%;
+                justify-content: flex-start; /* เรียงจากซ้ายไปขวา */
+                overflow-x: auto; /* หากรายการยาวเกินจอ ให้เลื่อนแนวนอนได้ */
+                padding-bottom: 5px; /* เว้นพื้นที่ให้เลื่อนง่ายขึ้น */
+                -webkit-overflow-scrolling: touch; /* ให้เลื่อนลื่นบน iOS */
+            }
+
+            /* ซ่อนแถบ Scrollbar เพื่อความสวยงาม */
+            .nav-menu::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-item a {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+                background-color: #2c3e50; /* ใส่พื้นหลังให้กดง่ายขึ้นบนมือถือ */
+                display: inline-block;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR HEADER -->
+<!-- ในส่วน Navbar หลัก -->
+<!-- NAVBAR HEADER WITH NOTIFICATION BADGE -->
+<header class="navbar">
+    <a href="index.html" class="logo">
+        ⚙️ PARTS<span>Store ⚙️</span>
+    </a>
+    <!-- ช่องค้นหาบน Navbar -->
+    <div class="nav-search-box">
+            <input type="text" id="navSearchInput" placeholder="🔍 ค้นหาอะไหล่ (เช่น ผ้าเบรก, กรอง...)" onkeyup="handleNavSearch()">
+            
+            <!-- ผลลัพธ์การค้นหาที่จะแสดงเป็นแนวนอน (Dropdown Horizontal Results) -->
+            <div id="navSearchResultPanel" class="nav-search-results">
+                <div class="results-header">
+                    <span>📦 ผลการค้นหาอะไหล่ที่คล้ายกัน</span>
+                    <button class="btn-close-results" onclick="closeNavSearch()">✕ ปิด</button>
+                </div>
+                <!-- รายการอะไหล่แนวนอนจะถูกเรนเดอร์ตรงนี้ -->
+                <div id="navHorizontalList" class="horizontal-scroll-container"></div>
+                <div class="results-footer">
+                    <a href="parts.html" id="viewAllPartsBtn" class="btn-view-all">ดูรายการในหน้าจัดการอะไหลทั้งหมด ➔</a>
+                </div>
+            </div>
+        </div>
+
+    <ul class="nav-menu" id="navMenu">
+        <li class="nav-item"><a href="parts.html">หมวดหมู่อะไหล่</a></li>
+        <li class="nav-item"><a href="withdraw.html">เบิกอะไหล่</a></li>
+        <li class="nav-item"><a href="record.html">ประวัติการเบิก</a></li>
+        
+        <!-- เมนูแจ้งเตือน พร้อม Badge ตัวเลข -->
+        <li class="nav-item">
+            <a href="warn.html" style="position: relative;">
+                🔔 แจ้งเตือน
+                <span id="notifyBadge" class="badge-count" style="display: none;">0</span>
+            </a>
+        </li>
+        
+        <!-- ปุ่มเข้าสู่ระบบ / แสดงชื่อผู้ใช้งาน -->
+        <li class="nav-item" id="authMenuItem">
+            <a href="login.html" class="cart-btn" id="loginBtn">🔑 เข้าสู่ระบบ</a>
+        </li>
+    </ul>
+</header>
+
+<style>
+    
+
+    /* ช่องค้นหาบน Navbar */
+    .nav-search-box {
+        position: relative;
+        flex: 1;
+        max-width: 450px;
+    }
+
+    .nav-search-box input {
+        width: 100%;
+        padding: 8px 15px;
+        border-radius: 20px;
+        border: 2px solid #34495e;
+        background-color: #2c3e50;
+        color: white;
+        font-size: 0.9rem;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    /* กล่องแสดงผลลัพธ์ค้นหา (Dropdown) */
+    .nav-search-results {
+        display: none;
+        position: absolute;
+        top: 45px;
+        left: 0;
+        width: 100%;
+        min-width: 320px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        padding: 15px;
+        z-index: 1001;
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .btn-close-results {
+        background: none;
+        border: none;
+        color: #95a5a6;
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    /* คอนเทนเนอร์จัดเรียงการ์ดอะไหล่แบบ "แนวนอน" (Horizontal Scroll) */
+    .horizontal-scroll-container {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 5px 2px 12px 2px;
+        scroll-behavior: smooth;
+    }
+
+    /* ตกแต่ง Scrollbar ของแนวนอน */
+    .horizontal-scroll-container::-webkit-scrollbar {
+        height: 6px;
+    }
+    .horizontal-scroll-container::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    /* การ์ดอะไหล่แต่ละชิ้นในแนวนอน */
+    .part-card-horizontal {
+        min-width: 170px;
+        max-width: 170px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px;
+        flex-shrink: 0;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+
+    .part-card-horizontal:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-color: #3498db;
+    }
+
+    .part-card-badge {
+        font-size: 0.75rem;
+        font-family: monospace;
+        background: #ebf5fb;
+        color: #2980b9;
+        padding: 2px 5px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-bottom: 5px;
+    }
+
+    .part-card-title {
+        font-size: 0.85rem;
+        font-weight: bold;
+        color: #1e293b;
+        margin-bottom: 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .part-card-meta {
+        font-size: 0.75rem;
+        color: #64748b;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .results-footer {
+        margin-top: 10px;
+        text-align: center;
+        padding-top: 8px;
+        border-top: 1px solid #eee;
+    }
+
+    .btn-view-all {
+        font-size: 0.8rem;
+        color: #3498db;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .btn-view-all:hover { text-decoration: underline; }
+
+    /* สำหรับหน้าจอมือถือที่มีความกว้างไม่เกิน 768px */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  .container {
+    flex-direction: column; /* เปลี่ยนจากเรียงแนวนอนเป็นแนวตั้ง */
+  }
+}
+</style>
+
+<script>
+    // ดึงข้อมูลอะไหล่กลางจาก localStorage
+    function getPartsDatabase() {
+        return JSON.parse(localStorage.getItem('partsData')) || [
+            {
+                id: 1, name: "ระบบเบรก", items: [
+                    { partNum: "BRK-001", desc: "ผ้าเบรกหน้า Toyota Vios", qty: 10, location: "ชั้น A1" },
+                    { partNum: "BRK-002", desc: "ผ้าเบรกหลัง Honda City", qty: 5, location: "ชั้น A2" },
+                    { partNum: "BRK-003", desc: "ผ้าเบรกหน้า Nissan Almera", qty: 2, location: "ชั้น A3" }
+                ]
+            },
+            {
+                id: 2, name: "ระบบกรอง", items: [
+                    { partNum: "FLT-101", desc: "ไส้กรองน้ำมันเครื่อง V6", qty: 15, location: "ชั้น B1" },
+                    { partNum: "FLT-102", desc: "ไส้กรองอากาศ Toyota Yaris", qty: 8, location: "ชั้น B2" }
+                ]
+            }
+        ];
+    }
+
+    // ฟังก์ชันค้นหาและแสดงผลแนวนอนบน Navbar
+    function handleNavSearch() {
+        const query = document.getElementById('navSearchInput').value.trim().toLowerCase();
+        const resultsPanel = document.getElementById('navSearchResultPanel');
+        const listContainer = document.getElementById('navHorizontalList');
+        const viewAllBtn = document.getElementById('viewAllPartsBtn');
+
+        if (!query) {
+            resultsPanel.style.display = 'none';
+            return;
+        }
+
+        const categories = getPartsDatabase();
+        let matchedParts = [];
+
+        // วนลูปหาอะไหล่ที่มีชื่อ หรือ Part Number หรือหมวดหมู่คล้ายกัน
+        categories.forEach(cat => {
+            cat.items.forEach(item => {
+                if (item.desc.toLowerCase().includes(query) || 
+                    item.partNum.toLowerCase().includes(query) ||
+                    cat.name.toLowerCase().includes(query)) {
+                    matchedParts.push({ ...item, categoryName: cat.name });
+                }
+            });
+        });
+
+        // ล้างข้อมูลเดิมออกก่อน
+        listContainer.innerHTML = '';
+
+        if (matchedParts.length > 0) {
+            matchedParts.forEach(part => {
+                const card = document.createElement('div');
+                card.className = 'part-card-horizontal';
+                // เมื่อคลิกที่การ์ด ให้เชื่อมส่งคำค้นหาไปยังหน้า parts.html ทันที
+                card.onclick = () => {
+                    window.location.href = `parts.html?search=${encodeURIComponent(part.desc)}`;
+                };
+
+                card.innerHTML = `
+                    <span class="part-card-badge">${part.partNum}</span>
+                    <div class="part-card-title" title="${part.desc}">${part.desc}</div>
+                    <div class="part-card-meta">
+                        <span style="color:${part.qty <= 3 ? '#e74c3c' : '#27ae60'}; font-weight:bold;">คงเหลือ: ${part.qty}</span>
+                        <span>📍 ${part.location}</span>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            viewAllBtn.href = `parts.html?search=${encodeURIComponent(query)}`;
+            resultsPanel.style.display = 'block';
+        } else {
+            listContainer.innerHTML = `<div style="font-size:0.85rem; color:#7f8c8d; padding:10px; text-align:center; width:100%;">ไม่พบอะไหล่ที่ชื่อคล้ายกับ "${query}"</div>`;
+            viewAllBtn.href = `parts.html`;
+            resultsPanel.style.display = 'block';
+        }
+    }
+
+    function closeNavSearch() {
+        document.getElementById('navSearchResultPanel').style.display = 'none';
+    }
+
+    // ตรวจสอบสถานะการล็อกอินเพื่อเปลี่ยนปุ่มบน Navbar
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const authMenuItem = document.getElementById('authMenuItem');
+
+        if (currentUser && authMenuItem) {
+            authMenuItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; color: white; font-size:0.85rem;">
+                    <span>👤 <strong>${currentUser.name}</strong></span>
+                    <button onclick="logout()" style="background: #e74c3c; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer;">ออกจากระบบ</button>
+                </div>
+            `;
+        }
+    });
+
+    function logout() {
+        if (confirm('ยืนยันการออกจากระบบ?')) {
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        }
+    }
+</script>
+
+<script>
+    // สคริปต์ตรวจเช็คการล็อกอินบน Navbar
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const authMenuItem = document.getElementById('authMenuItem');
+
+        if (currentUser) {
+            // ถ้ามีการล็อกอินแล้ว ให้เปลี่ยนปุ่มเป็นชื่อผู้ใช้ + ปุ่ม Logout
+            authMenuItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; color: white;">
+                    <span>👤 <strong>${currentUser.name}</strong></span>
+                    <button onclick="logout()" style="background: #e74c3c; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">ออกจากระบบ</button>
+                </div>
+            `;
+        }
+    });
+
+    function logout() {
+        if (confirm('ยืนยันการออกจากระบบ?')) {
+            localStorage.removeItem('currentUser');
+            window.location.reload(); // รีเฟรชหน้าเว็บ
+        }
+    }
+</script>
+
+<style>
+    /* สไตล์ป้ายตัวเลขบน Navbar */
+    .badge-count {
+        position: absolute;
+        top: -5px;
+        right: 0px;
+        background-color: #e74c3c;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50%;
+        border: 2px solid #1a252f;
+    }
+</style>
+
+<script>
+    // สคริปต์คำนวณจำนวนแจ้งเตือนเพื่อแสดงตัวเลขบน Navbar (แปะไว้ในทุกหน้าที่มี Navbar ได้เลย)
+    function updateNavbarBadge() {
+        const partsData = JSON.parse(localStorage.getItem('partsData')) || [];
+        const reqHistory = JSON.parse(localStorage.getItem('reqHistory')) || [];
+
+        // 1. นับจำนวนอะไหล่ที่ใกล้หมด (เหลือน้อยกว่าหรือเท่ากับ 3 ชิ้น)
+        let lowStockCount = 0;
+        partsData.forEach(cat => {
+            cat.items.forEach(item => {
+                if (item.qty <= 3) lowStockCount++;
+            });
+        });
+
+        // 2. จำนวนรายการเบิกทั้งหมด
+        let reqCount = reqHistory.length;
+
+        // ยอดรวมแจ้งเตือนทั้งหมด
+        let totalNotifications = lowStockCount + reqCount;
+
+        const badge = document.getElementById('notifyBadge');
+        if (badge) {
+            if (totalNotifications > 0) {
+                badge.innerText = totalNotifications > 99 ? '99+' : totalNotifications;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    }
+
+    // เรียกทำงานเมื่อโหลดหน้าเว็บ
+    window.addEventListener('DOMContentLoaded', updateNavbarBadge);
+</script>
+<script>
+    // สคริปต์ตรวจเช็คการล็อกอินบน Navbar
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const authMenuItem = document.getElementById('authMenuItem');
+
+        if (currentUser) {
+            // ถ้ามีการล็อกอินแล้ว ให้เปลี่ยนปุ่มเป็นชื่อผู้ใช้ + ปุ่ม Logout
+            authMenuItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; color: white;">
+                    <span>👤 <strong>${currentUser.name}</strong></span>
+                    <button onclick="logout()" style="background: #e74c3c; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">ออกจากระบบ</button>
+                </div>
+            `;
+        }
+    });
+
+    function logout() {
+        if (confirm('ยืนยันการออกจากระบบ?')) {
+            localStorage.removeItem('currentUser');
+            window.location.reload(); // รีเฟรชหน้าเว็บ
+        }
+    }
+</script>
+
+<script>
+    // สคริปต์คำนวณจำนวนแจ้งเตือนเพื่อแสดงตัวเลขบน Navbar (แปะไว้ในทุกหน้าที่มี Navbar ได้เลย)
+    function updateNavbarBadge() {
+        const partsData = JSON.parse(localStorage.getItem('partsData')) || [];
+        const reqHistory = JSON.parse(localStorage.getItem('reqHistory')) || [];
+
+        // 1. นับจำนวนอะไหล่ที่ใกล้หมด (เหลือน้อยกว่าหรือเท่ากับ 3 ชิ้น)
+        let lowStockCount = 0;
+        partsData.forEach(cat => {
+            cat.items.forEach(item => {
+                if (item.qty <= 3) lowStockCount++;
+            });
+        });
+
+        // 2. จำนวนรายการเบิกทั้งหมด
+        let reqCount = reqHistory.length;
+
+        // ยอดรวมแจ้งเตือนทั้งหมด
+        let totalNotifications = lowStockCount + reqCount;
+
+        const badge = document.getElementById('notifyBadge');
+        if (badge) {
+            if (totalNotifications > 0) {
+                badge.innerText = totalNotifications > 99 ? '99+' : totalNotifications;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    }
+
+    // เรียกทำงานเมื่อโหลดหน้าเว็บ
+    window.addEventListener('DOMContentLoaded', updateNavbarBadge);
+</script>
+
+<!-- CONTENT MOCKUP (ตัวอย่างเนื้อหาหน้าเว็บ) -->
+ 
+    <main style="padding: 40px 5%; text-align: left;">
+        <h2>คำแนะนำการใช้งานระบบจัดการอะไหล่</h2>
+        <p style="margin-top: 10px; color: #fdfdfd;">ยินดีต้อนรับเข้าสู่ระบบจัดการอะไหล่ ระบบนี้ถูกออกแบบมาเพื่อช่วยในการจัดเก็บ ค้นหา และบริหารจัดการข้อมูลอะไหล่ภายในหน่วยงานหรือองค์กรอย่างเป็นระบบ ลดความผิดพลาดในการบันทึกข้อมูล และช่วยให้ผู้ใช้งานสามารถตรวจสอบจำนวนคงเหลือของอะไหล่ได้อย่างสะดวก รวดเร็ว และถูกต้อง
+
+การใช้งานระบบเริ่มต้นจากการสร้าง หมวดหมู่อะไหล่ เพื่อแยกประเภทของอะไหล่ให้เป็นระเบียบ เช่น อะไหล่เครื่องยนต์ อะไหล่ระบบไฟฟ้า อะไหล่ระบบช่วงล่าง หรือหมวดหมู่อื่น ๆ ตามความเหมาะสม เมื่อสร้างหมวดหมู่เรียบร้อยแล้ว ผู้ใช้งานสามารถเปิดหมวดหมู่เพื่อเพิ่มรายการอะไหล่ภายในหมวดนั้นได้
+
+การเพิ่มรายการอะไหล่ จะต้องกรอกข้อมูลให้ครบถ้วน ได้แก่ PART NUMBER เพื่อระบุรหัสอะไหล่ DESCRIPTION เพื่ออธิบายชื่อหรือรายละเอียดของอะไหล่ จำนวน (Quantity) เพื่อระบุจำนวนคงเหลือ และ ตำแหน่ง (Location) เพื่อระบุจุดจัดเก็บอะไหล่ เช่น ชั้นวาง ตู้ หรือคลังสินค้า เพื่อให้สามารถค้นหาและนำอะไหล่ออกมาใช้งานได้อย่างรวดเร็ว
+
+หากข้อมูลมีการเปลี่ยนแปลง ผู้ใช้งานสามารถกดปุ่ม แก้ไข (Edit) เพื่อปรับปรุงข้อมูลให้เป็นปัจจุบัน หรือกดปุ่ม ลบ (Delete) เพื่อลบหมวดหมู่หรือรายการอะไหล่ที่ไม่ต้องการใช้งาน โดยควรตรวจสอบข้อมูลทุกครั้งก่อนทำการลบ เนื่องจากข้อมูลที่ถูกลบอาจไม่สามารถกู้คืนได้
+
+ระบบรองรับการเปิดและปิดรายการของแต่ละหมวดหมู่ เพื่อช่วยให้การแสดงผลเป็นระเบียบ ลดความซับซ้อนของหน้าจอ และช่วยให้ค้นหารายการอะไหล่ได้ง่ายขึ้น โดยสามารถเปิดเฉพาะหมวดหมู่ที่ต้องการใช้งาน และปิดหมวดหมู่อื่นที่ยังไม่ใช้งานได้ตลอดเวลา
+
+เพื่อให้ข้อมูลภายในระบบมีความถูกต้อง ควรบันทึกข้อมูลทุกครั้งหลังจากมีการเพิ่ม แก้ไข หรือลบรายการอะไหล่ รวมถึงตรวจสอบจำนวนอะไหล่คงเหลืออย่างสม่ำเสมอ หากมีการเบิกหรือรับอะไหล่เข้า ควรปรับปรุงข้อมูลในระบบทันที เพื่อให้จำนวนคงเหลือในระบบตรงกับจำนวนจริงภายในคลัง
+
+ระบบนี้เหมาะสำหรับการบริหารจัดการอะไหล่ในโรงงาน โรงเรียน วิทยาลัย บริษัท หรือหน่วยงานที่มีการจัดเก็บอะไหล่จำนวนมาก ช่วยเพิ่มความสะดวกในการค้นหาข้อมูล ลดระยะเวลาในการตรวจสอบ และเพิ่มประสิทธิภาพในการบริหารคลังอะไหล่ ทำให้สามารถติดตามข้อมูลได้อย่างเป็นระบบ ถูกต้อง และพร้อมใช้งานอยู่เสมอ
+
+</body>
+</html>
+
+<div id="loginGuardModal" class="login-guard-overlay" style="display: none;">
+    <div class="login-guard-box">
+        <div class="guard-icon">🔒</div>
+        <h2>กรุณาเข้าสู่ระบบก่อนใช้งาน</h2>
+        <p>คุณต้องทำการเข้าสู่ระบบเพื่อเข้าถึงข้อมูลและจัดการระบบอะไหล่</p>
+        <div class="guard-actions">
+            <a href="login.html" class="btn-login-redirect">🔑 ไปที่หน้าเข้าสู่ระบบ</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* สไตล์หน้าต่างเตือนล็อกอินแบบเต็มหน้าจอ */
+    .login-guard-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(26, 37, 47, 0.92); /* ฉากหลังมืดทึบป้องกันการมองเห็น/กดเมนู */
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* อยู่ชั้นบนสุด */
+    }
+
+    .login-guard-box {
+        background: white;
+        padding: 35px 30px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        animation: popup 0.3s ease-out;
+    }
+
+    @keyframes popup {
+        from { transform: scale(0.8); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .guard-icon {
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+    }
+
+    .login-guard-box h2 {
+        color: #2c3e50;
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+
+    .login-guard-box p {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+        line-height: 1.5;
+    }
+
+    .btn-login-redirect {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: background 0.2s ease;
+        box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-login-redirect:hover {
+        background-color: #c0392b;
+    }
+</style>
+
+<script>
+    // สคริปต์ตรวจเช็คสถานะการเข้าสู่ระบบ
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const modal = document.getElementById('loginGuardModal');
+
+        // ถ้ายังไม่มีการเก็บข้อมูล currentUser ใน localStorage
+        if (!currentUser) {
+            if (modal) {
+                modal.style.display = 'flex'; // แสดงหน้าต่างแจ้งเตือน
+                document.body.style.overflow = 'hidden'; // ล็อกไม่ให้สกอร์ลหน้าเว็บได้
+            }
+        }
+    });
+</script>
+
+<!-- ==========================================
+     DASHBOARD SECTION (สรุปภาพรวมคลังอะไหล่)
+     ========================================== -->
+<section class="dashboard-section">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h3>📊 ภาพรวมระบบคลังอะไหล่ (Parts Dashboard)</h3>
+            <p>สรุปสถานะข้อมูลคงเหลือในระบบ เชื่อมโยงกับคลังอะไหล่แบบ Real-time</p>
+        </div>
+
+        <!-- กล่องการ์ดแสดงตัวเลขสรุป -->
+        <div class="dashboard-grid">
+            <!-- การ์ดที่ 1: จำนวนรายการอะไหล่ทั้งหมด -->
+            <div class="stat-card" onclick="window.location.href='parts.html'">
+                <div class="stat-icon icon-blue">📦</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="dashTotalItems">0</span>
+                    <span class="stat-label">รายการอะไหล่ทั้งหมด (SKU)</span>
+                </div>
+            </div>
+
+            <!-- การ์ดที่ 2: จำนวนชิ้นส่วนอะไหล่รวมทั้งหมด -->
+            <div class="stat-card" onclick="window.location.href='parts.html'">
+                <div class="stat-icon icon-green">🔢</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="dashTotalQty">0</span>
+                    <span class="stat-label">จำนวนชิ้นส่วนคงเหลือรวม (ชิ้น)</span>
+                </div>
+            </div>
+
+            <!-- การ์ดที่ 3: รายการที่ต้องเติม/เตือนสินค้าใกล้หมด -->
+            <div class="stat-card" onclick="window.location.href='parts.html?filter=lowstock'">
+                <div class="stat-icon icon-red">⚠️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="dashLowStockCount">0</span>
+                    <span class="stat-label">อะไหล่ที่ใกล้หมด / ต้องเติม</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ปุ่มทางลัดเชื่อมต่อไปหน้าจัดการอะไหล่ -->
+        <div class="dashboard-footer">
+            <a href="parts.html" class="btn-go-parts">⚙️ ไปยังหน้าจัดการและค้นหาอะไหล่ ➔</a>
+        </div>
+    </div>
+</section>
+
+
+<style>
+    /* ==========================================
+       DASHBOARD STYLES & SPACING
+       ========================================== */
+    .dashboard-section {
+        margin-top: 60px; /* ระยะห่างจากส่วนคำอธิบายด้านบน */
+        margin-bottom: 40px;
+        padding: 0 5%;
+        
+    }
+
+    
+
+    .dashboard-container {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e1e8ed;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .dashboard-header {
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f1f4f6;
+        padding-bottom: 12px;
+    }
+
+    .dashboard-header h3 {
+        color: #1a252f;
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
+    .dashboard-header p {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    /* Grid Layout สำหรับการ์ด Dashboard */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        border-color: #3498db;
+    }
+
+    .stat-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.8rem;
+    }
+
+    .icon-blue { background-color: #ebf5fb; }
+    .icon-green { background-color: #e8f8f5; }
+    .icon-red { background-color: #fadbd8; }
+
+    .stat-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2c3e50;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .dashboard-footer {
+        text-align: right;
+        padding-top: 15px;
+        border-top: 1px solid #f1f4f6;
+    }
+
+    .btn-go-parts {
+        display: inline-block;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-go-parts:hover {
+        background-color: #2980b9;
+    }
+</style>
+
+<script>
+    // สคริปต์คำนวณและอัปเดตข้อมูล Dashboard จาก localStorage
+    function updateDashboardStats() {
+        // ดึงข้อมูลคลังอะไหล่จากคีย์ partsData เดียวกับหน้า parts.html
+        const partsData = JSON.parse(localStorage.getItem('partsData')) || [
+            {
+                id: 1, name: "ระบบเบรก", items: [
+                    { partNum: "BRK-001", desc: "ผ้าเบรกหน้า Toyota Vios", qty: 10, location: "ชั้น A1" },
+                    { partNum: "BRK-002", desc: "ผ้าเบรกหลัง Honda City", qty: 5, location: "ชั้น A2" },
+                    { partNum: "BRK-003", desc: "จานเบรกหน้า Nissan Almera", qty: 2, location: "ชั้น A3" }
+                ]
+            },
+            {
+                id: 2, name: "ระบบกรอง", items: [
+                    { partNum: "FLT-101", desc: "ไส้กรองน้ำมันเครื่อง V6", qty: 15, location: "ชั้น B1" },
+                    { partNum: "FLT-102", desc: "ไส้กรองอากาศ Toyota Yaris", qty: 8, location: "ชั้น B2" }
+                ]
+            }
+        ];
+
+        let totalItems = 0;       // จำนวนประเภทอะไหล่ทั้งหมด
+        let totalQty = 0;         // จำนวนชิ้นส่วนอะไหล่รวมทั้งหมด
+        let lowStockCount = 0;    // จำนวนรายการที่เหลือน้อยกว่าหรือเท่ากับ 3 ชิ้น
+
+        partsData.forEach(cat => {
+            if (cat.items && Array.isArray(cat.items)) {
+                totalItems += cat.items.length;
+                cat.items.forEach(item => {
+                    const qty = parseInt(item.qty) || 0;
+                    totalQty += qty;
+                    if (qty <= 3) {
+                        lowStockCount++;
+                    }
+                });
+            }
+        });
+
+        // อัปเดตตัวเลขลงในการ์ด Dashboard
+        document.getElementById('dashTotalItems').innerText = totalItems.toLocaleString();
+        document.getElementById('dashTotalQty').innerText = totalQty.toLocaleString();
+        
+        const lowStockElem = document.getElementById('dashLowStockCount');
+        lowStockElem.innerText = lowStockCount.toLocaleString();
+        if (lowStockCount > 0) {
+            lowStockElem.style.color = '#e74c3c'; // สีกรอบตัวเลขสีแดงเมื่อมีสินค้าใกล้หมด
+        }
+    }
+
+    // เรียกให้ทำงานทันทีเมื่อโหลดหน้าเว็บสำเร็จ
+    document.addEventListener('DOMContentLoaded', updateDashboardStats);
+</script>
+
+
