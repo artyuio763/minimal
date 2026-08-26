@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการและค้นหาอะไหล่ - Parts Management</title>
+    <link rel="icon" href="./ChatGPT Image 17 ก.ค. 2569 12_42_50.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        p, h1, h2, h3, h4, h5, h6, span, a, button, input, textarea {
+            font-family: 'Mitr', sans-serif !important;
+            font-weight: 400;
+            
+        }
+    </style>
+
+    <style>
+        /* ==========================================
+           1. RESET & GENERAL STYLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px 5%;
+        }
+
+        /* Top Header Navbar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a252f;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .btn-back {
+            background-color: #7f8c8d;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover { background-color: #95a5a6; }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s ease;
+        }
+
+        .btn-primary { background-color: #27ae60; color: white; }
+        .btn-primary:hover { background-color: #219150; }
+
+        .btn-warning { background-color: #f39c12; color: white; }
+        .btn-warning:hover { background-color: #d68910; }
+
+        .btn-danger { background-color: #e74c3c; color: white; }
+        .btn-danger:hover { background-color: #c0392b; }
+
+        .btn-sm { padding: 4px 8px; font-size: 0.8rem; }
+
+        /* Card Container */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+            margin-bottom: 20px;
+        }
+
+        /* ==========================================
+           2. SEARCH BAR & ACTION PANEL
+           ========================================== */
+        .search-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        .search-info {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+
+        /* ==========================================
+           3. PARTS TABLE & ACCORDION
+           ========================================== */
+        .category-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #e1e8ed;
+        }
+
+        .category-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .category-body {
+            padding: 20px;
+            display: none;
+        }
+
+        .category-body.active {
+            display: block;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #e1e8ed;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .highlight {
+            background-color: #f1c40f;
+            color: #000;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .part-badge {
+            font-family: monospace;
+            font-weight: bold;
+            color: #2980b9;
+            background-color: #ebf5fb;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ==========================================
+           4. MODAL FORM
+           ========================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+    <style>
+        body{
+            background-image: url('ChatGPT Image.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+
+<body>
+
+    <!-- TOP NAV / HEADER -->
+    <header class="top-bar">
+        <a href="index.html" class="btn-back">⬅️ ย้อนกลับไปหน้า Navbar</a>
+        <h2>⚙️ รายการและระบบค้นหาอะไหล่</h2>
+        <button class="btn btn-primary" onclick="openCatModal()">+ เพิ่มหมวดหมู่ใหม่</button>
+    </header>
+
+    <!-- SEARCH & CONTROLS PANEL -->
+    <section class="card">
+        <div class="search-panel">
+            <div class="search-box-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="พิมพ์ชื่ออะไหล่, Part Number หรือหมวดหมู่ที่คล้ายกัน..." onkeyup="handleSearch()">
+            </div>
+        </div>
+        <div class="search-info" id="searchResultInfo">
+            💡 พิมพ์คำค้นหาเพื่อดึงรายชื่ออะไหล่ทั้งหมดที่ชื่อคล้ายกันขึ้นมาแสดงทันที
+        </div>
+    </section>
+
+    <!-- CONTAINER สำหรับแสดงรายการหมวดหมู่และอะไหล่ -->
+    <main id="categoryContainer">
+        <!-- รายการจะถูกเรนเดอร์ผ่าน JavaScript -->
+    </main>
+
+    <!-- ==========================================
+         MODAL: เพิ่ม/แก้ไข หมวดหมู่
+         ========================================== -->
+    <div class="modal" id="catModal">
+        <div class="modal-content">
+            <h3 id="catModalTitle">เพิ่มหมวดหมู่ใหม่</h3>
+            <div class="form-group" style="margin-top:15px;">
+                <label>ชื่อหมวดหมู่</label>
+                <input type="text" id="catNameInput" placeholder="เช่น อะไหล่เบรก, อะไหล่กรองน้ำมัน">
+            </div>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('catModal')">ยกเลิก</button>
+                <button class="btn btn-primary" onclick="saveCategory()">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL: เพิ่ม/แก้ไข อะไหล่
+         ========================================== -->
+    <div class="modal" id="partModal">
+        <div class="modal-content">
+            <h3 id="partModalTitle">เพิ่มรายการอะไหล่</h3>
+            <input type="hidden" id="partCatId">
+            <input type="hidden" id="partIndex">
+            
+            <div class="form-group" style="margin-top:15px;">
+                <label>Part Number (รหัสอะไหล่)</label>
+                <input type="text" id="pPartNum" placeholder="เช่น PN-99482">
+            </div>
+            <div class="form-group">
+                <label>Description (ชื่อ/รายละเอียดอะไหล่)</label>
+                <textarea id="pDesc" rows="2" placeholder="เช่น ผ้าเบรกหน้า Toyota Vios, ผ้าเบรกหลัง Honda City"></textarea>
+            </div>
+            <div class="form-group">
+                <label>จำนวนคงเหลือ</label>
+                <input type="number" id="pQty" value="1" min="0">
+            </div>
+            <div class="form-group">
+                <label>ตำแหน่งที่จัดเก็บ (Location)</label>
+                <input type="text" id="pLoc" placeholder="เช่น ชั้น A1-02, โกดัง 2">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal('partModal')">ยกเลิก</button>
+                <button class="btn btn-primary" onclick="savePart()">บันทึกอะไหล่</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         LOGIN GUARD MODAL (ป้องกันคนยังไม่ล็อกอิน)
+         ========================================== -->
+    <div id="loginGuardModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26,37,47,0.92); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 380px;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+            <h2 style="color: #2c3e50; margin-bottom: 10px;">กรุณาเข้าสู่ระบบก่อนใช้งาน</h2>
+            <p style="color: #7f8c8d; margin-bottom: 20px;">คุณต้องเข้าสู่ระบบก่อนจึงจะสามารถจัดการข้อมูลอะไหล่ได้</p>
+            <a href="login.html" style="background: #e74c3c; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">🔑 ไปที่หน้าเข้าสู่ระบบ</a>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ข้อมูลคลังอะไหล่เริ่มต้น
+        let categories = JSON.parse(localStorage.getItem('partsData')) || [
+            {
+                id: 1,
+                name: "ระบบเบรก (Brake Systems)",
+                isOpen: true,
+                items: [
+                    { partNum: "BRK-001", desc: "ผ้าเบรกหน้า Toyota Vios", qty: 10, location: "ชั้น A1" },
+                    { partNum: "BRK-002", desc: "ผ้าเบรกหลัง Honda City", qty: 5, location: "ชั้น A2" },
+                    { partNum: "BRK-003", desc: "จานเบรกหน้า Nissan Almera", qty: 2, location: "ชั้น A3" }
+                ]
+            },
+            {
+                id: 2,
+                name: "ระบบกรองและน้ำมัน (Filters)",
+                isOpen: true,
+                items: [
+                    { partNum: "FLT-101", desc: "ไส้กรองน้ำมันเครื่อง V6", qty: 15, location: "ชั้น B1" },
+                    { partNum: "FLT-102", desc: "ไส้กรองอากาศ Toyota Yaris", qty: 8, location: "ชั้น B2" }
+                ]
+            }
+        ];
+
+        let currentEditCatId = null;
+
+        window.onload = function() {
+            checkLogin();
+            render();
+        };
+
+        // ตรวจสอบการล็อกอิน
+        function checkLogin() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                document.getElementById('loginGuardModal').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // บันทึกลง LocalStorage และ Render
+        function updateData() {
+            localStorage.setItem('partsData', JSON.stringify(categories));
+            render();
+        }
+
+        // ฟังก์ชันค้นหาแบบครอบคลุม
+        function handleSearch() {
+            render();
+        }
+
+        // ไฮไลท์ข้อความที่ตรงกับคำค้นหา
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, `<span class="highlight">$1</span>`);
+        }
+
+        // ฟังก์ชันวาด UI แสดงผล
+        function render() {
+            const container = document.getElementById('categoryContainer');
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const infoBox = document.getElementById('searchResultInfo');
+            
+            container.innerHTML = '';
+            let totalMatchCount = 0;
+
+            categories.forEach(cat => {
+                // กรองอะไหล่ที่ตรงหรือคล้ายกับคำค้นหา
+                const matchedItems = cat.items.map((item, originalIndex) => ({ ...item, originalIndex }))
+                    .filter(item => {
+                        if (!query) return true;
+                        return item.partNum.toLowerCase().includes(query) ||
+                               item.desc.toLowerCase().includes(query) ||
+                               cat.name.toLowerCase().includes(query) ||
+                               item.location.toLowerCase().includes(query);
+                    });
+
+                // ถ้าค้นหาอยู่ แล้วหมวดหมู่นี้มีรายการที่ตรงกัน ให้ขยายเปิดหมวดหมู่อัตโนมัติ
+                const isCatOpen = query ? (matchedItems.length > 0) : cat.isOpen;
+
+                if (query && matchedItems.length === 0) return; // ถ้าค้นหาแล้วไม่มีในหมวดนี้ ให้ข้ามไป
+
+                totalMatchCount += matchedItems.length;
+
+                const card = document.createElement('div');
+                card.className = 'category-card';
+
+                let itemsHTML = '';
+                if (matchedItems.length === 0) {
+                    itemsHTML = `<p style="color:#777; font-style:italic;">ยังไม่มีรายการอะไหล่ในหมวดหมู่นี้</p>`;
+                } else {
+                    itemsHTML = `
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Part Number</th>
+                                        <th>Description (ชื่อ/รายละเอียดอะไหล่)</th>
+                                        <th>จำนวน</th>
+                                        <th>ตำแหน่ง</th>
+                                        <th style="width: 120px;">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${matchedItems.map(item => `
+                                        <tr>
+                                            <td><span class="part-badge">${highlightText(item.partNum, query)}</span></td>
+                                            <td><strong>${highlightText(item.desc, query)}</strong></td>
+                                            <td>
+                                                <span style="font-weight:bold; color:${item.qty <= 3 ? '#e74c3c' : '#27ae60'}">
+                                                    ${item.qty} ${item.qty <= 3 ? '(ใกล้หมด)' : ''}
+                                                </span>
+                                            </td>
+                                            <td>📍 ${highlightText(item.location, query)}</td>
+                                            <td>
+                                                <button class="btn btn-warning btn-sm" onclick="editPart(${cat.id}, ${item.originalIndex})">แก้ไข</button>
+                                                <button class="btn btn-danger btn-sm" onclick="deletePart(${cat.id}, ${item.originalIndex})">ลบ</button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="category-header">
+                        <div class="category-title">
+                            <span>📁 ${highlightText(cat.name, query)}</span>
+                            <small style="opacity:0.8;">(${matchedItems.length} รายการ)</small>
+                        </div>
+                        <div class="category-actions">
+                            <button class="btn btn-sm ${isCatOpen ? 'btn-warning' : 'btn-primary'}" onclick="toggleCategory(${cat.id})">
+                                ${isCatOpen ? '🔽 ซ่อนรายการ' : '▶️ เปิดดูรายการ'}
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="editCat(${cat.id})">แก้ไขหมวด</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCat(${cat.id})">ลบหมวด</button>
+                        </div>
+                    </div>
+                    <div class="category-body ${isCatOpen ? 'active' : ''}">
+                        <button class="btn btn-primary btn-sm" style="margin-bottom: 12px;" onclick="openPartModal(${cat.id})">+ เพิ่มอะไหล่ในหมวดนี้</button>
+                        ${itemsHTML}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            // แสดงสรุปผลการค้นหา
+            if (query) {
+                infoBox.innerHTML = `🔎 พบอะไหล่ที่ชื่อคล้ายกันทั้งหมด <strong>${totalMatchCount}</strong> รายการ สำหรับคำค้นหา: "<span style="color:#e74c3c;">${query}</span>"`;
+            } else {
+                infoBox.innerHTML = `💡 พิมพ์คำค้นหาเพื่อดึงรายชื่ออะไหล่ทั้งหมดที่ชื่อคล้ายกันขึ้นมาแสดงทันที`;
+            }
+
+            if (query && totalMatchCount === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center; padding: 40px; color:#7f8c8d;">
+                        🚫 ไม่พบรายชื่ออะไหล่ที่ตรงหรือคล้ายกับ "${query}"
+                    </div>
+                `;
+            }
+        }
+
+        // ==========================================
+        // CATEGORY ACTIONS
+        // ==========================================
+        function toggleCategory(catId) {
+            const cat = categories.find(c => c.id === catId);
+            if (cat) {
+                cat.isOpen = !cat.isOpen;
+                updateData();
+            }
+        }
+
+        function openCatModal(catId = null) {
+            currentEditCatId = catId;
+            const input = document.getElementById('catNameInput');
+            const title = document.getElementById('catModalTitle');
+
+            if (catId) {
+                const cat = categories.find(c => c.id === catId);
+                input.value = cat.name;
+                title.innerText = 'แก้ไขชื่อหมวดหมู่';
+            } else {
+                input.value = '';
+                title.innerText = 'เพิ่มหมวดหมู่ใหม่';
+            }
+            document.getElementById('catModal').style.display = 'flex';
+        }
+
+        function saveCategory() {
+            const name = document.getElementById('catNameInput').value.trim();
+            if (!name) return alert('กรุณากรอกชื่อหมวดหมู่');
+
+            if (currentEditCatId) {
+                const cat = categories.find(c => c.id === currentEditCatId);
+                cat.name = name;
+            } else {
+                categories.push({
+                    id: Date.now(),
+                    name: name,
+                    isOpen: true,
+                    items: []
+                });
+            }
+            closeModal('catModal');
+            updateData();
+        }
+
+        function editCat(catId) { openCatModal(catId); }
+
+        function deleteCat(catId) {
+            if (confirm('ยืนยันลบหมวดหมู่นี้และรายการอะไหล่ทั้งหมดข้างใน?')) {
+                categories = categories.filter(c => c.id !== catId);
+                updateData();
+            }
+        }
+
+        // ==========================================
+        // PART ACTIONS
+        // ==========================================
+        function openPartModal(catId, partIdx = null) {
+            document.getElementById('partCatId').value = catId;
+            document.getElementById('partIndex').value = partIdx !== null ? partIdx : '';
+            
+            const title = document.getElementById('partModalTitle');
+
+            if (partIdx !== null) {
+                const cat = categories.find(c => c.id === catId);
+                const item = cat.items[partIdx];
+                document.getElementById('pPartNum').value = item.partNum;
+                document.getElementById('pDesc').value = item.desc;
+                document.getElementById('pQty').value = item.qty;
+                document.getElementById('pLoc').value = item.location;
+                title.innerText = 'แก้ไขรายการอะไหล่';
+            } else {
+                document.getElementById('pPartNum').value = '';
+                document.getElementById('pDesc').value = '';
+                document.getElementById('pQty').value = 1;
+                document.getElementById('pLoc').value = '';
+                title.innerText = 'เพิ่มรายการอะไหล่';
+            }
+            document.getElementById('partModal').style.display = 'flex';
+        }
+
+        function savePart() {
+            const catId = parseInt(document.getElementById('partCatId').value);
+            const partIdx = document.getElementById('partIndex').value;
+            
+            const partNum = document.getElementById('pPartNum').value.trim();
+            const desc = document.getElementById('pDesc').value.trim();
+            const qty = parseInt(document.getElementById('pQty').value) || 0;
+            const location = document.getElementById('pLoc').value.trim();
+
+            if (!partNum) return alert('กรุณากรอก Part Number');
+            if (!desc) return alert('กรุณากรอก Description / ชื่ออะไหล่');
+
+            const cat = categories.find(c => c.id === catId);
+            const partData = { partNum, desc, qty, location };
+
+            if (partIdx !== '') {
+                cat.items[parseInt(partIdx)] = partData;
+            } else {
+                cat.items.push(partData);
+            }
+
+            closeModal('partModal');
+            updateData();
+        }
+
+        function editPart(catId, partIdx) { openPartModal(catId, partIdx); }
+
+        function deletePart(catId, partIdx) {
+            if (confirm('ยืนยันการลบรายการอะไหล่นี้?')) {
+                const cat = categories.find(c => c.id === catId);
+                cat.items.splice(partIdx, 1);
+                updateData();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
