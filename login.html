@@ -1,0 +1,309 @@
+
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ / สมัครสมาชิก - PartsHub</title>
+    <link rel="icon" href="./ChatGPT Image 17 ก.ค. 2569 12_42_50.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        p, h1, h2, h3, h4, h5, h6, a, span, div, li, button {
+            font-family: 'Mitr', sans-serif !important;
+            font-weight: 400;
+            
+        }
+    </style>
+
+    <style>
+
+        
+
+        /* ==========================================
+           1. RESET & BASE STYLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a252f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Card Container */
+        .auth-container {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-header h2 {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #34495e;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        /* Buttons & Links */
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #c0392b;
+        }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .switch-mode a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .switch-mode a:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert Message */
+        .alert-msg {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .alert-danger { background: #fadbd8; color: #78281f; }
+        .alert-success { background: #d4efdf; color: #145a32; }
+    </style>
+</head>
+
+    <style>
+        body{
+            background-image: url('ChatGPT Image.png');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+<body>
+
+    <div class="auth-container">
+        <!-- แจ้งเตือนข้อผิดพลาด/สำเร็จ -->
+        <div id="alertBox" class="alert-msg"></div>
+
+        <!-- ==========================================
+             1. FORM: เข้าสู่ระบบ (LOGIN)
+             ========================================== -->
+        <div id="loginSection">
+            <div class="auth-header">
+                <h2>⚙️ เข้าสู่ระบบ</h2>
+                <p>กรุณากรอกชื่อผู้ใช้และรหัสผ่านเพื่อใช้งาน</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginName">ชื่อผู้ใช้งาน</label>
+                    <input type="text" id="loginName" placeholder="ระบุชื่อผู้ใช้งาน" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">รหัสผ่าน</label>
+                    <input type="password" id="loginPassword" placeholder="ระบุรหัสผ่าน" required>
+                </div>
+
+                <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+            </form>
+
+            <div class="switch-mode">
+                ยังไม่มีบัญชีใช่หรือไม่? <a href="#" onclick="switchForm('register')">สมัครสมาชิกที่นี่</a>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             2. FORM: สมัครสมาชิก (REGISTER)
+             ========================================== -->
+        <div id="registerSection" style="display: none;">
+            <div class="auth-header">
+                <h2>📝 สมัครสมาชิกใหม่</h2>
+                <p>กรอกข้อมูลด้านล่างเพื่อสร้างบัญชี</p>
+            </div>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">ชื่อ - นามสกุล</label>
+                    <input type="text" id="regName" placeholder="เช่น อาร์ตี้ ปวช.2" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">อีเมล</label>
+                    <input type="email" id="regEmail" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">รหัสผ่าน</label>
+                    <input type="password" id="regPassword" placeholder="กำหนดรหัสผ่าน" required minlength="4">
+                </div>
+
+                <button type="submit" class="btn-submit" style="background-color: #27ae60;">ยืนยันการสมัครสมาชิก</button>
+            </form>
+
+            <div class="switch-mode">
+                มีบัญชีอยู่แล้ว? <a href="#" onclick="switchForm('login')">เข้าสู่ระบบ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ดึงข้อมูลผู้ใช้ทั้งหมดจาก localStorage
+        let usersDB = JSON.parse(localStorage.getItem('usersDB')) || [];
+
+        // สลับฟอร์ม ระหว่าง Login กับ Register
+        function switchForm(mode) {
+            const loginSec = document.getElementById('loginSection');
+            const regSec = document.getElementById('registerSection');
+            const alertBox = document.getElementById('alertBox');
+            
+            alertBox.style.display = 'none';
+
+            if (mode === 'register') {
+                loginSec.style.display = 'none';
+                regSec.style.display = 'block';
+            } else {
+                regSec.style.display = 'none';
+                loginSec.style.display = 'block';
+            }
+        }
+
+        // แสดงข้อความแจ้งเตือน
+        function showAlert(msg, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerText = msg;
+            alertBox.className = `alert-msg alert-${type}`;
+            alertBox.style.display = 'block';
+        }
+
+        // 1. ระบบสมัครสมาชิก (REGISTER)
+        function handleRegister(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            // ตรวจสอบชื่อซ้ำ
+            const existUser = usersDB.find(u => u.name === name || u.email === email);
+            if (existUser) {
+                showAlert('ชื่อผู้ใช้งานหรืออีเมลนี้ถูกใช้แล้ว!', 'danger');
+                return;
+            }
+
+            // บันทึกผู้ใช้ใหม่
+            const newUser = { name, email, password };
+            usersDB.push(newUser);
+            localStorage.setItem('usersDB', JSON.stringify(usersDB));
+
+            // สมัครเสร็จแล้ว สลับกลับไปหน้า Login + เติมชื่อให้อัตโนมัติ
+            switchForm('login');
+            document.getElementById('loginName').value = name;
+            showAlert('สมัครสมาชิกสำเร็จ! กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบ', 'success');
+        }
+
+        // 2. ระบบเข้าสู่ระบบ (LOGIN)
+        function handleLogin(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('loginName').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // ค้นหาผู้ใช้จาก DB
+            const user = usersDB.find(u => u.name === name && u.password === password);
+
+            if (user) {
+                // บันทึกข้อมูลการล็อกอินปัจจุบัน
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                showAlert('เข้าสู่ระบบสำเร็จ! กำลังนำคุณไปยังหน้าหลัก...', 'success');
+
+                // เด้งกลับไปหน้า Navbar หลัก (index.html)
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                showAlert('ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง!', 'danger');
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
