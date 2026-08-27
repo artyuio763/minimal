@@ -367,15 +367,24 @@
     <script>
         // ข้อมูลคลังอะไหล่เริ่มต้น
         let categories = JSON.parse(localStorage.getItem('partsData')) || [
- {
+{
                 id: 1,
-                name: '',
+                name: 'อะไหล่เบรก',
                 isOpen: true,
                 items: [
-                    { partNum: 'PN-99482', desc: '', qty: , location: '' },
-                    { partNum: 'PN-99483', desc: '', qty: , location: '' }
+                    { partNum: 'PN-99482', desc: 'ผ้าเบรกหน้า Toyota Vios', qty: 5, location: 'ชั้น A1-02' },
+                    { partNum: 'PN-99483', desc: 'ผ้าเบรกหลัง Honda City', qty: 2, location: 'ชั้น A1-03' }
                 ]
             },
+            {
+                id: 2,
+                name: 'อะไหล่กรองน้ำมัน',
+                isOpen: false,
+                items: [
+                    { partNum: 'PN-12345', desc: 'กรองน้ำมันเครื่อง Toyota Altis', qty: 10, location: 'ชั้น B2-01' }
+                ]
+            }
+            
 
         ];
 
