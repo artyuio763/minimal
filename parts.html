@@ -366,7 +366,9 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // ข้อมูลคลังอะไหล่เริ่มต้น
-        let categories = JSON.parse(localStorage.getItem('partsData')) || 
+        let categories = JSON.parse(localStorage.getItem('partsData')) || [
+            
+        ];
 
         let currentEditCatId = null;
 
