@@ -366,27 +366,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // ข้อมูลคลังอะไหล่เริ่มต้น
-        let categories = JSON.parse(localStorage.getItem('partsData')) || [
-            {
-                id: 1,
-                name: "ระบบเบรก (Brake Systems)",
-                isOpen: true,
-                items: [
-                    { partNum: "BRK-001", desc: "ผ้าเบรกหน้า Toyota Vios", qty: 10, location: "ชั้น A1" },
-                    { partNum: "BRK-002", desc: "ผ้าเบรกหลัง Honda City", qty: 5, location: "ชั้น A2" },
-                    { partNum: "BRK-003", desc: "จานเบรกหน้า Nissan Almera", qty: 2, location: "ชั้น A3" }
-                ]
-            },
-            {
-                id: 2,
-                name: "ระบบกรองและน้ำมัน (Filters)",
-                isOpen: true,
-                items: [
-                    { partNum: "FLT-101", desc: "ไส้กรองน้ำมันเครื่อง V6", qty: 15, location: "ชั้น B1" },
-                    { partNum: "FLT-102", desc: "ไส้กรองอากาศ Toyota Yaris", qty: 8, location: "ชั้น B2" }
-                ]
-            }
-        ];
+        let categories = JSON.parse(localStorage.getItem('partsData')) || 
 
         let currentEditCatId = null;
 
